@@ -23,7 +23,39 @@ const CreateCharacter = ({ onCreateCharacter }: CreateCharacterProps) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingDesc, setIsGeneratingDesc] = useState(false);
   const { toast } = useToast();
+
+  const generateDescription = async () => {
+    if (!name.trim()) {
+      toast({
+        title: "Ошибка",
+        description: "Сначала введите имя персонажа",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsGeneratingDesc(true);
+    
+    const descriptions = [
+      `Загадочный ${name} обладает необычной харизмой и острым умом. Высокий рост, пронзительный взгляд, всегда одет в тёмные одежды. Известен своей храбростью и стремлением к справедливости.`,
+      `${name} — опытный воин с богатой историей. Шрамы на лице говорят о пережитых битвах. Несмотря на суровый вид, обладает добрым сердцем и готов прийти на помощь слабым.`,
+      `Молодой маг ${name} изучает древние тайны. Светлые волосы, задумчивый взгляд, всегда носит амулет с загадочным символом. Стремится раскрыть секреты магии.`,
+      `${name} — ловкий разбойник с весёлым нравом. Быстрый, хитрый и обаятельный. Умеет находить выход из любой ситуации. Верен друзьям и не любит несправедливость.`
+    ];
+
+    setTimeout(() => {
+      const generated = descriptions[Math.floor(Math.random() * descriptions.length)];
+      setDescription(generated);
+      setIsGeneratingDesc(false);
+      
+      toast({
+        title: "Описание создано!",
+        description: "ИИ сгенерировал описание персонажа",
+      });
+    }, 1500);
+  };
 
   const generateCharacterImage = async (name: string, description: string): Promise<string> => {
     const prompt = `Professional fantasy RPG character portrait: ${name}. ${description}. High quality digital art, dramatic lighting, detailed face, cinematic composition, fantasy game character design`;
@@ -106,15 +138,32 @@ const CreateCharacter = ({ onCreateCharacter }: CreateCharacterProps) => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description">Описание внешности и характера</Label>
+            <div className="flex items-center justify-between">
+              <Label htmlFor="description">Описание внешности и характера</Label>
+              <Button
+                type="button"
+                size="sm"
+                variant="outline"
+                onClick={generateDescription}
+                disabled={isGeneratingDesc || isGenerating || !name.trim()}
+                className="shadow-3d"
+              >
+                {isGeneratingDesc ? (
+                  <Icon name="Loader2" size={14} className="mr-1 animate-spin" />
+                ) : (
+                  <Icon name="Sparkles" size={14} className="mr-1" />
+                )}
+                ИИ генерация
+              </Button>
+            </div>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              placeholder="Опишите внешность, характер, особенности персонажа для генерации портрета..."
+              placeholder="Опишите внешность, характер, особенности персонажа или используйте ИИ..."
               className="min-h-[120px] resize-none shadow-3d"
               maxLength={500}
-              disabled={isGenerating}
+              disabled={isGenerating || isGeneratingDesc}
             />
             <p className="text-xs text-muted-foreground text-right">
               {description.length}/500
