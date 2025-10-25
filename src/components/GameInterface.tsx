@@ -10,6 +10,7 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   timestamp: Date;
+  imageUrl?: string;
 }
 
 interface Story {
@@ -25,6 +26,7 @@ interface Character {
   name: string;
   description: string;
   avatar: string;
+  imageUrl?: string;
 }
 
 interface GameInterfaceProps {
@@ -55,18 +57,26 @@ const GameInterface = ({ game, character, onSendMessage, onBack }: GameInterface
   return (
     <div className="max-w-5xl mx-auto animate-fade-in">
       <div className="mb-6 flex items-center justify-between">
-        <Button variant="ghost" onClick={onBack}>
+        <Button variant="ghost" onClick={onBack} className="shadow-3d">
           <Icon name="ArrowLeft" size={20} className="mr-2" />
           Назад
         </Button>
         <div className="flex items-center gap-3">
           {character && (
             <>
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center">
-                {character.avatar}
-              </div>
+              {character.imageUrl ? (
+                <img 
+                  src={character.imageUrl} 
+                  alt={character.name}
+                  className="w-10 h-10 rounded-full object-cover shadow-3d"
+                />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-3d">
+                  {character.avatar}
+                </div>
+              )}
               <div>
-                <h3 className="font-semibold">{character.name}</h3>
+                <h3 className="font-semibold text-glow">{character.name}</h3>
                 <Badge variant="secondary" className="text-xs">ИИ Мастер активен</Badge>
               </div>
             </>
@@ -74,15 +84,15 @@ const GameInterface = ({ game, character, onSendMessage, onBack }: GameInterface
         </div>
       </div>
 
-      <Card className="flex flex-col h-[70vh]">
+      <Card className="flex flex-col h-[70vh] glass-3d shadow-3d">
         <ScrollArea className="flex-1 p-6" ref={scrollRef}>
           {game.messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center text-center space-y-4">
-              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center shadow-3d">
                 <Icon name="Sparkles" size={40} className="text-primary" />
               </div>
               <div>
-                <h3 className="text-xl font-semibold mb-2">Начните свою историю</h3>
+                <h3 className="text-xl font-semibold mb-2 text-glow">Начните свою историю</h3>
                 <p className="text-muted-foreground max-w-md">
                   ИИ-мастер поможет создать увлекательный сюжет. Опишите желаемый сценарий или задайте вопрос.
                 </p>
@@ -91,6 +101,7 @@ const GameInterface = ({ game, character, onSendMessage, onBack }: GameInterface
                 <Button
                   variant="outline"
                   size="sm"
+                  className="shadow-3d"
                   onClick={() => setMessage('Расскажи о мире, в котором мы играем')}
                 >
                   О мире
@@ -98,6 +109,7 @@ const GameInterface = ({ game, character, onSendMessage, onBack }: GameInterface
                 <Button
                   variant="outline"
                   size="sm"
+                  className="shadow-3d"
                   onClick={() => setMessage('Начни с загадочного события')}
                 >
                   Загадка
@@ -105,6 +117,7 @@ const GameInterface = ({ game, character, onSendMessage, onBack }: GameInterface
                 <Button
                   variant="outline"
                   size="sm"
+                  className="shadow-3d"
                   onClick={() => setMessage('Создай эпическое приключение')}
                 >
                   Приключение
@@ -120,10 +133,10 @@ const GameInterface = ({ game, character, onSendMessage, onBack }: GameInterface
                 >
                   <div
                     className={`
-                      max-w-[80%] rounded-lg p-4
+                      max-w-[80%] rounded-lg p-4 shadow-3d
                       ${msg.role === 'user'
                         ? 'bg-primary text-primary-foreground'
-                        : 'bg-muted'
+                        : 'bg-muted glass-3d'
                       }
                     `}
                   >
@@ -135,6 +148,13 @@ const GameInterface = ({ game, character, onSendMessage, onBack }: GameInterface
                         {msg.role === 'user' ? 'Вы' : 'ИИ Мастер'}
                       </span>
                     </div>
+                    {msg.imageUrl && (
+                      <img 
+                        src={msg.imageUrl} 
+                        alt="Scene"
+                        className="w-full rounded-lg mb-3 shadow-3d-intense"
+                      />
+                    )}
                     <p className="whitespace-pre-wrap">{msg.content}</p>
                     <p className="text-xs opacity-50 mt-2">
                       {msg.timestamp.toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}
@@ -152,7 +172,7 @@ const GameInterface = ({ game, character, onSendMessage, onBack }: GameInterface
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               placeholder="Введите ваше действие или реплику..."
-              className="resize-none"
+              className="resize-none shadow-3d"
               rows={2}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
@@ -161,7 +181,7 @@ const GameInterface = ({ game, character, onSendMessage, onBack }: GameInterface
                 }
               }}
             />
-            <Button type="submit" size="lg" disabled={!message.trim()}>
+            <Button type="submit" size="lg" disabled={!message.trim()} className="shadow-3d-intense">
               <Icon name="Send" size={20} />
             </Button>
           </form>

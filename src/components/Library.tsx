@@ -22,6 +22,7 @@ interface Character {
   name: string;
   description: string;
   avatar: string;
+  imageUrl?: string;
 }
 
 interface LibraryProps {
@@ -39,17 +40,17 @@ const achievements = [
 const Library = ({ stories, characters }: LibraryProps) => {
   return (
     <div className="animate-fade-in">
-      <h2 className="text-3xl font-bold mb-6">Библиотека</h2>
+      <h2 className="text-3xl font-bold mb-6 text-glow">Библиотека</h2>
 
       <Tabs defaultValue="stories" className="w-full">
-        <TabsList className="grid w-full grid-cols-2 mb-6">
+        <TabsList className="grid w-full grid-cols-2 mb-6 shadow-3d">
           <TabsTrigger value="stories">Истории</TabsTrigger>
           <TabsTrigger value="achievements">Достижения</TabsTrigger>
         </TabsList>
 
         <TabsContent value="stories" className="animate-fade-in">
           {stories.length === 0 ? (
-            <Card className="text-center py-12">
+            <Card className="text-center py-12 glass-3d shadow-3d">
               <CardContent>
                 <Icon name="BookOpen" size={64} className="mx-auto mb-4 text-muted-foreground opacity-50" />
                 <p className="text-muted-foreground">У вас пока нет сохранённых историй</p>
@@ -61,7 +62,7 @@ const Library = ({ stories, characters }: LibraryProps) => {
               {stories.map((story) => {
                 const character = characters.find(c => c.id === story.characterId);
                 return (
-                  <Card key={story.id} className="hover:bg-accent/50 transition-colors cursor-pointer">
+                  <Card key={story.id} className="hover:bg-accent/50 transition-colors cursor-pointer card-3d shadow-3d glass-3d">
                     <CardHeader>
                       <div className="flex items-start justify-between">
                         <div className="flex items-center gap-3">
@@ -102,7 +103,7 @@ const Library = ({ stories, characters }: LibraryProps) => {
             {achievements.map((achievement) => (
               <Card
                 key={achievement.id}
-                className={`${achievement.unlocked ? 'bg-card' : 'bg-muted/50 opacity-60'}`}
+                className={`${achievement.unlocked ? 'bg-card shadow-3d' : 'bg-muted/50 opacity-60'} glass-3d`}
               >
                 <CardHeader>
                   <div className="flex items-start gap-4">

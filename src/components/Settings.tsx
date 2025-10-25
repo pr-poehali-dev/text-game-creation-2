@@ -9,10 +9,10 @@ import Icon from '@/components/ui/icon';
 const Settings = () => {
   return (
     <div className="max-w-3xl mx-auto animate-fade-in">
-      <h2 className="text-3xl font-bold mb-6">Настройки</h2>
+      <h2 className="text-3xl font-bold mb-6 text-glow">Настройки</h2>
 
       <div className="space-y-6">
-        <Card>
+        <Card className="glass-3d shadow-3d">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Icon name="Brain" size={24} />
@@ -79,7 +79,7 @@ const Settings = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-3d shadow-3d">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Icon name="Image" size={24} />
@@ -118,7 +118,7 @@ const Settings = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="glass-3d shadow-3d">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Icon name="Settings" size={24} />
